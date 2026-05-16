@@ -89,3 +89,21 @@ func TestResolve_OriginalUnmodified(t *testing.T) {
 		}
 	}
 }
+
+func TestResolve_ChainedReferences(t *testing.T) {
+	env := map[string]string{
+		"A": "${B}",
+		"B": "${C}",
+		"C": "final",
+	}
+	result, err := Resolve(env, DefaultOptions())
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if result["A"] != "final" {
+		t.Errorf("got %q, want %q", result["A"], "final")
+	}
+	if result["B"] != "final" {
+		t.Errorf("got %q, want %q", result["B"], "final")
+	}
+}
